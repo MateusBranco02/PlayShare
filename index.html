@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login PlayShare</title>
+    <link rel="stylesheet" href="./style/style.css">
+</head>
+
+<body>
+    <main id="login">
+        <div class="container center--column b-blue">
+            <img class="logo" src="./assets/logo.png" alt="">
+
+            <div class="container__content center--column">
+                <h3>Login</h3>
+                <!--colocamos como espera de evento no form e chamamos funcao login-->
+                <form class="center--column container__form" onsubmit="event.preventDefault(); login();">
+                    <input class="b-blue" type="email" placeholder="E-mail" id="login-email">
+                    <input class="b-blue" type="password" placeholder="Senha" id="login-password">
+                    <span id="mensagem"></span>
+                    <a href="" id="forget-password">Esqueci a senha</a>
+                    <!--tirar evento onclick e adicionar type submit -->
+                    <button type="submit" id="send">Acessar</button>
+                    <strong><a href="./cadastro.html" id="sign-in">Não possuo cadastro</a></strong>
+                </form>
+
+            </div>
+        </div>
+    </main>
+    <script src="./scripts/autenticacao.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlayShare</title>
+    <link rel="stylesheet" href="./style/style.css">
+</head>
+
+<body>
+    <main id="home">
+        <div class="sidebar left__column b-blue">
+            <div id="profile-img" class="b-blue">
+
+            </div>
+
+            <nav class="navbar">
+                <a href="/home.html">
+                    <img src="./assets/icon/group.png" alt="">
+                </a>
+                <a href="">
+                    <img src="./assets/icon/user.png" alt="">
+                </a>
+                <a href="/musicasCurtidas.html">
+                    <img src="./assets/icon/heart.png" alt="">
+                </a>
+                <a href="">
+                    <img src="./assets/icon/play-circle.png" alt="">
+                </a>
+                <a href="">
+                    <img src="./assets/icon/music-dashboard.png" alt="">
+                </a>
+            </nav>
+        </div>
+
+        <div class="container">
+            <header class="header b-blue center__between">
+                <div class="header__content">
+                    <input type="text" class="b-blue" placeholder="Pesquisar">
+                </div>
+
+                <div class="header__nav inline-center">
+                    <img src="./assets/icon/setting-2.png" alt="">
+                    <img src="./assets/icon/notification.png" alt="">
+                </div>
+            </header>
+
+            <div class="content">
+                <div class="content__collumn">
+                    <section id="recomendations">
+                        <div class="section__header">
+                            <h2>Recomendações</h2>
+                            <div class="navigation">
+
+                            </div>
+                        </div>
+
+                        <div id="recommendations" class="recommendations__container">
+                            <button id="prev" onclick="changePage(-1)" disabled>◀</button>
+                            <div class="section__content"></div>
+                            <button id="next" onclick="changePage(1)">▶</button>
+                        </div>
+
+                    </section>
+                    <section id="populares">
+                        <div class="section__header">
+                            <h2>Artistas populares</h2>
+                            <div class="navigation">
+
+                            </div>
+                        </div>
+                        <div class="section__content">
+                            <div class="artist">
+                                <div class="artist__img">
+
+                                </div>
+                                <p class="artist__name">Nome do artista</p>
+                            </div>
+                            <div class="artist">
+                                <div class="artist__img">
+
+                                </div>
+                                <p class="artist__name">Nome do artista</p>
+                            </div>
+                            <div class="artist">
+                                <div class="artist__img">
+
+                                </div>
+                                <p class="artist__name">Nome do artista</p>
+                            </div>
+                            <div class="artist">
+                                <div class="artist__img">
+
+                                </div>
+                                <p class="artist__name">Nome do artista</p>
+                            </div>
+                            <div class="artist">
+                                <div class="artist__img">
+
+                                </div>
+                                <p class="artist__name">Nome do artista</p>
+                            </div>
+                        </div>
+                    </section>
+                    <section id="playlists">
+                        <div class="section__header">
+                            <h2>Playlists</h2>
+                        </div>
+                        <div class="section__content">
+                            <div class="playlist">
+                                <div class="playlist__img">
+                                    <div class="hole">
+
+                                    </div>
+                                </div>
+                                <p class="artist__name">Nome da playlist</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="content__collumn">
+                    <section id="player">
+
+                    </section>
+                    <section id="favoritos"></section>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+<script src="./scripts/autenticacao.js"></script>
+<script src="./scripts/home.js"></script>
+
+</html>

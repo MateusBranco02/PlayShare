@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar no PlayShare</title>
+    <link rel="stylesheet" href="./style/style.css">
+</head>
+
+<body>
+    <main id="sign-in-page">
+        <div class="container center__between">
+            <div class="container__content left__column">
+                <img class="logo" src="./assets/logo.png" alt="">
+                <div class="container__description">
+                    <h3>Efetuar Cadastro</h3>
+                    <p>Digite seus dados para se cadastrar na plataforma</p>
+                </div>
+                    <!--colocamos como espera de evento no form e chamamos funcao addUser-->
+                <form class="left__column container__form" onsubmit="event.preventDefault(); addUser();">
+                    <input class="b-blue" type="text" placeholder="Nome completo" id="name" required>
+
+                    <input class="b-blue" type="email" placeholder="E-mail" id="email" required>
+                    <input class="b-blue" type="email" placeholder="Confirmar e-mail" id="confirm-email" required>
+                    <div class="inline-center">
+                        <input class="b-blue" type="password" placeholder="Senha" id="password" required>
+                        <input class="b-blue" type="password" placeholder="Confirmar senha" id="confirm-password" required>
+                    </div>
+                    <span id="error"></span>
+                    <div class="inline__end">
+                        <button id="back" onclick="backLogin()">Voltar</button>
+                        <!--tiramos o evento onclick do botao acessar e colocamos um type: submit-->
+                        <button id="send" type="submit">Acessar</button>
+                    </div>
+
+                </form>
+            </div>
+            <div class="inline-end">
+                <img class="image" src="./assets/img-cadastro.png" alt="">
+            </div>
+        </div>
+
+    </main>
+    <script src="./scripts/autenticacao.js"></script>
+</body>
+
+</html>
