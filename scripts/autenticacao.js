@@ -1,10 +1,10 @@
-const clientId = '40a3837a2c484e799084c18cb1cccdd7';
+const clientId = 'db3ce4d64a744d569fee4fdf0ce35741';
 const redirectUri = 'http://127.0.0.1:5500/home.html';
 const authEndPoint = 'https://accounts.spotify.com/authorize';
 const responseType = 'token';
 
 function loginWithSpotify() {
-    const scopes = encodeURIComponent('user-read-private user-read-email playlist-read-private user-top-read');
+    const scopes = encodeURIComponent('user-read-private user-read-email playlist-read-private user-read-recently-played');
     const authUrl = `${authEndPoint}?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=${responseType}&scope=${scopes}`;
     window.location.href = authUrl;
 }

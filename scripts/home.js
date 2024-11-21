@@ -1,10 +1,9 @@
 let currentPage = 0; // Página inicial
 const itemsPerPage = 4; // Quantidade de álbuns exibidos por página
-let tracks = [];
-let currentArtistPage = 0; // Página inicial para artistas populares
-const artistsPerPage = 4; // Quantidade de artistas exibidos por página
-let artists = []; // Lista de artistas populares
-const recommendationsCache = {}; // Cache para recomendações
+let featuredPlaylists = []; // Lista de playlists em destaque
+let currentRecentlyPlayedPage = 0; // Página inicial
+const recentlyPlayedPerPage = 4; // Quantidade de músicas exibidas por página
+let recentlyPlayedTracks = []; // Lista de músicas tocadas recentemente
 
 //funcao vai na pagina inicial
 function verificaUsuario() {
@@ -23,79 +22,73 @@ window.onload = async function () {
 
     if (token) {
         saveSpotifyToken(token);
-        await fetchSpotifyData(token); // Playlists
-        await fetchRecommendations(token); // Recomendações
-        await fetchTopArtists(token); // Artistas populares
+        await fetchSpotifyData(token); // Playlists do usuário
+        await fetchFeaturedPlaylists(token); // Playlists em destaque
+        await fetchRecentlyPlayed(token); //  Músicas tocadas recentemente
     } else {
         console.log('Usuário não autenticado no Spotify');
     }
 }
 
-async function fetchRecommendations(token, genre = 'pop') {
-
-    // Usa o cache se já houver dados
-    if (recommendationsCache[genre]) {
-        console.log('Usando cache para recomendações');
-        renderRecommendations(recommendationsCache[genre]);
-        return;
-    }
-
+async function fetchFeaturedPlaylists(token) {
     try {
-        const response = await fetch(`https://api.spotify.com/v1/recommendations?seed_genres=${genre}`, {
+        const response = await fetch("https://api.spotify.com/v1/browse/featured-playlists", {
             headers: {
-                'Authorization': `Bearer ${token}`
+                Authorization: `Bearer ${token}`
             }
         });
 
         if (!response.ok) {
             if (response.status === 429) {
-                throw new Error('Limite de requisições excedido. Tente novamente mais tarde.');
+                throw new Error("Limite de requisições excedido. Tente novamente mais tarde.");
             }
-            throw new Error('Erro ao buscar recomendações');
+            throw new Error("Erro ao buscar playlists em destaque.");
         }
 
         const data = await response.json();
-        recommendationsCache[genre] = data.tracks; // Armazena no cache
-        console.log('Recomendações:', data.tracks);
 
-        // tracks = data.tracks
-        renderRecommendations(data.tracks);
+        featuredPlaylists = data.playlists.items; // Armazena as playlists em destaque
+
+        renderFeaturedPlaylists(); // Renderiza a primeira página
     } catch (error) {
-        console.error('Erro ao buscar recomendações:', error);
+        console.error("Erro ao buscar playlists em destaque:", error);
     }
 }
 
-function renderRecommendations(tracks) {
-    const section = document.getElementById('recomendations');
-    const content = section.querySelector('.section__content');
-    content.innerHTML = ''; // Limpa a seção
+function renderFeaturedPlaylists(playlists) {
+    const section = document.getElementById("recomendations");
+    const content = section.querySelector(".section__content");
+    content.innerHTML = ""; // Limpa o conteúdo anterior
 
-    // Calcula o início e o fim dos álbuns a serem exibidos
+    // Calcula os índices das playlists a serem exibidas na página atual
     const start = currentPage * itemsPerPage;
     const end = start + itemsPerPage;
-    const visibleTracks = tracks.slice(start, end); // Obtém os álbuns para a página atual
+    const visiblePlaylists = featuredPlaylists.slice(start, end); // Obtém as playlists visíveis
 
-    visibleTracks.forEach(track => {
-        const div = document.createElement('div');
-        div.className = 'recomendations b-blue';
+    visiblePlaylists.forEach(playlist => {
+        const div = document.createElement("div");
+        div.className = "recomendations b-blue";
 
-        const albumImage = track.album.images[0]?.url || './assets/default-album.png';
+        const playlistImage = playlist.images[0]?.url || "./assets/default-playlist.png";
 
-        div.style.backgroundImage = `url('${albumImage}')`;
+        div.style.backgroundImage = `url('${playlistImage}')`;
 
         div.innerHTML = `
             <div class="recomendations__description">
-                <div class="recomendations__description--title">
-                    <h3>${track.name}</h3>
-                    <p>${track.artists.length} artistas</p>
-                </div>
-                <img src="./assets/icon/player-1.png" alt="">
+                <h3>${playlist.name}</h3>
+                <p>${playlist.tracks.total} músicas</p>
             </div>
         `;
+
+        // Adiciona um evento para abrir a playlist no Spotify
+        div.addEventListener("click", () => {
+            window.open(playlist.external_urls.spotify, "_blank");
+        });
+
         content.appendChild(div);
     });
 
-    updateNavigationButtons(tracks.length); // Atualiza o estado dos botões
+    updateNavigationButtons(featuredPlaylists.length); // Atualiza os botões de navegação
 }
 
 // Atualiza os botões de navegação
@@ -113,12 +106,12 @@ function updateNavigationButtons(totalItems) {
 // Lida com a navegação
 function changePage(offset) {
     currentPage += offset; // Atualiza a página atual
-    renderRecommendations(tracks); // Re-renderiza os álbuns
+    renderFeaturedPlaylists(); // Re-renderiza os álbuns
 }
 
-async function fetchTopArtists(token) {
+async function fetchRecentlyPlayed(token) {
     try {
-        const response = await fetch('https://api.spotify.com/v1/me/top/artists', {
+        const response = await fetch('https://api.spotify.com/v1/me/player/recently-played', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -128,49 +121,60 @@ async function fetchTopArtists(token) {
             if (response.status === 429) {
                 throw new Error('Limite de requisições excedido. Tente novamente mais tarde.');
             }
-            throw new Error('Erro ao buscar artistas populares');
+            throw new Error('Erro ao buscar músicas tocadas recentemente');
         }
 
         const data = await response.json();
-        artists = data.items; // Armazena os artistas
-        console.log('Artistas populares:', data.items);
-        renderArtists(artists);
+        console.log('Músicas tocadas recentemente:', data.items);
+
+        recentlyPlayedTracks = data.items; // Armazena as músicas tocadas recentemente
+        renderRecentlyPlayed(recentlyPlayedTracks); // Renderiza a primeira página
     } catch (error) {
-        console.error('Erro ao buscar artistas populares:', error);
+        console.error('Erro ao buscar músicas tocadas recentemente:', error);
     }
 }
 
-function renderArtists(artists) {
-    const section = document.getElementById('artists');
+function renderRecentlyPlayed(tracks) {
+    const section = document.getElementById('populares');
     const content = section.querySelector('.section__content');
-    content.innerHTML = ''; // Limpa a seção antes de adicionar novos itens
+    content.innerHTML = ''; // Limpa o conteúdo anterior
 
-    artists.forEach(artist => {
+    // Calcula os índices das músicas a serem exibidas na página atual
+    const start = currentRecentlyPlayedPage * recentlyPlayedPerPage;
+    const end = start + recentlyPlayedPerPage;
+    const visibleTracks = tracks.slice(start, end); // Obtém as músicas visíveis
+
+    visibleTracks.forEach(item => {
+        const track = item.track; // Informações da música
         const div = document.createElement('div');
-        div.className = 'artist';
+        div.className = 'recentes';
 
         div.innerHTML = `
-        <div class="artist__img" style="background-image: url(${artist.images[0]?.url || './assets/default-artist.png'})"></div>
-        <p class="artist__name">${artist.name}</p>
-    `;
+            <div class="artist__img" style="background-image: url(${track.album.images[0]?.url || './assets/default-track.png'})"></div>
+            <p class="artist__name">${track.name}</p>
+            <p class="artist__name">${track.artists.map(artist => artist.name).join(', ')}</p>
+        `;
+
         content.appendChild(div);
     });
+
+    updateRecentlyPlayedNavigation(tracks.length); // Atualiza os botões de navegação
 }
 
-function renderTopTracks(tracks) {
-    const section = document.getElementById('popular-artists');
-    const content = section.querySelector('.section__content');
-    content.innerHTML = ''; // Limpa a seção antes de adicionar novos itens
+function updateRecentlyPlayedNavigation(totalItems) {
+    const prevButton = document.getElementById('recent-prev');
+    const nextButton = document.getElementById('recent-next');
 
-    tracks.forEach(track => {
-        const div = document.createElement('div');
-        div.className = 'track';
+    // Desativa o botão "Anterior" na primeira página
+    prevButton.disabled = currentRecentlyPlayedPage === 0;
 
-        div.innerHTML = `
-            <p>${track.name} - ${track.album.name}</p>
-        `;
-        content.appendChild(div);
-    });
+    // Desativa o botão "Próximo" na última página
+    nextButton.disabled = (currentRecentlyPlayedPage + 1) * recentlyPlayedPerPage >= totalItems;
+}
+
+function changeRecentlyPlayedPage(offset) {
+    currentRecentlyPlayedPage += offset; // Atualiza a página atual
+    renderRecentlyPlayed(recentlyPlayedTracks); // Re-renderiza as músicas
 }
 
 async function fetchSpotifyData(token) {
@@ -186,7 +190,6 @@ async function fetchSpotifyData(token) {
         const data = await response.json();
         console.log('Playlists:', data.items);
 
-        await fetchRecommendations(token);
         // Renderizar playlists
         renderPlaylists(data.items);
 

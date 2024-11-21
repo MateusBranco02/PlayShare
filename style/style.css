@@ -308,13 +308,15 @@ button:disabled {
     gap: 10px;
     position: relative;
     width: 100%;
-    overflow: hidden; /* Garante que os itens fora da largura sejam ocultados */
+    overflow: hidden;
+    /* Garante que os itens fora da largura sejam ocultados */
 }
 
 .artist__img {
     background-image: url(../assets/artist.png);
     background-repeat: no-repeat;
     background-size: cover;
+    border-radius: 50%;
     width: 160px;
     height: 160px;
 }
@@ -330,6 +332,17 @@ button:disabled {
 .artist__name {
     color: white;
     text-align: center;
+}
+
+.recentes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    width: 100%;
+    overflow: hidden; /* Garante que os itens fora da largura sejam ocultados */
 }
 
 .playlist__img {
