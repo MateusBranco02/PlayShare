@@ -104,3 +104,5 @@ function login() {
     }
 
 }
+
+module.exports = { loginWithSpotify, getSpotifyTokenFromURL, saveSpotifyToken, addUser, login };

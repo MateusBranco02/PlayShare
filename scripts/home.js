@@ -30,6 +30,28 @@ window.onload = async function () {
     }
 }
 
+async function fetchSpotifyData(token) {
+    try {
+        const response = await fetch('https://api.spotify.com/v1/me/playlists', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) throw new Error('Erro ao buscar dados do Spotify');
+
+        const data = await response.json();
+        console.log('Playlists:', data.items);
+
+        // Renderizar playlists
+        renderPlaylists(data.items);
+
+    } catch (error) {
+        console.error('Erro ao buscar playlists:', error);
+        throw error;
+    }
+}
+
 async function fetchFeaturedPlaylists(token) {
     try {
         const response = await fetch("https://api.spotify.com/v1/browse/featured-playlists", {
@@ -49,9 +71,10 @@ async function fetchFeaturedPlaylists(token) {
 
         featuredPlaylists = data.playlists.items; // Armazena as playlists em destaque
 
-        renderFeaturedPlaylists(); // Renderiza a primeira página
+        renderFeaturedPlaylists(featuredPlaylists); // Renderiza a primeira página
     } catch (error) {
         console.error("Erro ao buscar playlists em destaque:", error);
+        throw error;
     }
 }
 
@@ -96,11 +119,13 @@ function updateNavigationButtons(totalItems) {
     const prevButton = document.getElementById('prev');
     const nextButton = document.getElementById('next');
 
-    // Desativa o botão "Anterior" na primeira página
-    prevButton.disabled = currentPage === 0;
+    if (prevButton && nextButton) {
+        // Desativa o botão "Anterior" na primeira página
+        prevButton.disabled = currentPage === 0;
 
-    // Desativa o botão "Próximo" na última página
-    nextButton.disabled = (currentPage + 1) * itemsPerPage >= totalItems;
+        // Desativa o botão "Próximo" na última página
+        nextButton.disabled = (currentPage + 1) * itemsPerPage >= totalItems;
+    }
 }
 
 // Lida com a navegação
@@ -131,6 +156,7 @@ async function fetchRecentlyPlayed(token) {
         renderRecentlyPlayed(recentlyPlayedTracks); // Renderiza a primeira página
     } catch (error) {
         console.error('Erro ao buscar músicas tocadas recentemente:', error);
+        throw error;
     }
 }
 
@@ -165,37 +191,18 @@ function updateRecentlyPlayedNavigation(totalItems) {
     const prevButton = document.getElementById('recent-prev');
     const nextButton = document.getElementById('recent-next');
 
-    // Desativa o botão "Anterior" na primeira página
-    prevButton.disabled = currentRecentlyPlayedPage === 0;
+    if (prevButton && nextButton) {
+        // Desativa o botão "Anterior" na primeira página
+        prevButton.disabled = currentRecentlyPlayedPage === 0;
 
-    // Desativa o botão "Próximo" na última página
-    nextButton.disabled = (currentRecentlyPlayedPage + 1) * recentlyPlayedPerPage >= totalItems;
+        // Desativa o botão "Próximo" na última página
+        nextButton.disabled = (currentRecentlyPlayedPage + 1) * recentlyPlayedPerPage >= totalItems;
+    }
 }
 
 function changeRecentlyPlayedPage(offset) {
     currentRecentlyPlayedPage += offset; // Atualiza a página atual
     renderRecentlyPlayed(recentlyPlayedTracks); // Re-renderiza as músicas
-}
-
-async function fetchSpotifyData(token) {
-    try {
-        const response = await fetch('https://api.spotify.com/v1/me/playlists', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        if (!response.ok) throw new Error('Erro ao buscar dados do Spotify');
-
-        const data = await response.json();
-        console.log('Playlists:', data.items);
-
-        // Renderizar playlists
-        renderPlaylists(data.items);
-
-    } catch (error) {
-        console.error('Erro ao buscar playlists:', error);
-    }
 }
 
 function renderPlaylists(playlists) {
@@ -261,3 +268,5 @@ document.addEventListener('click', function (event) {
         fetchPlaylistTracks(playlistId, token);
     }
 });
+
+module.exports = { fetchSpotifyData, fetchFeaturedPlaylists, fetchRecentlyPlayed, renderFeaturedPlaylists, renderRecentlyPlayed, renderPlaylists };

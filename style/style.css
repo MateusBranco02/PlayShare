@@ -72,6 +72,7 @@ body {
 }
 
 #send {
+    width: 100%;
     padding: 8px 25px;
     color: white;
     border-radius: 50px;
@@ -88,6 +89,7 @@ body {
 }
 
 #back {
+    width: 100%;
     padding: 8px 25px;
     color: #007AFF;
     border-radius: 50px;
