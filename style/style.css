@@ -1,13 +1,15 @@
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 /*template*/
 
 body {
     background: linear-gradient(217deg, #0517BA, #0C121F 80.71%);
-    width: 100vw;
+    width: 100%;
+    height: 100vh;
 }
 
 
@@ -181,18 +183,17 @@ input:hover {
 
 /*home*/
 #home {
-    display: flex;
-    width: 100vw;
+    width: 100%;
 }
 
 #home .container {
-    margin-left: 8.1%;
+    margin-left: 8%;
 }
 
 /*header*/
 .header {
     padding: 20px 25px;
-    width: 88vw;
+    width: 100%;
     border-radius: 0px 0px 0px 20px;
 }
 
@@ -213,7 +214,6 @@ input:hover {
     align-items: center;
     gap: 20px;
     padding: 20px 0;
-    height: 100%;
     height: 100vh;
     position: fixed;
 }
